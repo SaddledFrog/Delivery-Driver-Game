@@ -4,21 +4,29 @@ using UnityEngine;
 
 public class Driver : MonoBehaviour
 {
-    [SerializeField] float steerSpeed = 1f;
-    [SerializeField] float moveSpeed = 0.01f;
+    [SerializeField] float steerSpeed = 100f;
+    [SerializeField] float moveSpeed = 10f;
+    [SerializeField] float fastSpeed = 20f;
+    [SerializeField] float slowSpeed = 3f;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
     void Update()
     {
-        float streerAmout = Input.GetAxis("Horizontal") * steerSpeed;
-        float moveAmout = Input.GetAxis("Vertical") * moveSpeed;
+        float streerAmout = Input.GetAxis("Horizontal") * steerSpeed * Time.deltaTime;
+        float moveAmout = Input.GetAxis("Vertical") * moveSpeed * Time.deltaTime;
         transform.Rotate(0, 0, -streerAmout);
         transform.Translate(0, moveAmout, 0);
+    }
+
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        moveSpeed = slowSpeed;
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.tag == "Boost")
+        {
+            moveSpeed = fastSpeed;
+        }
     }
 }
